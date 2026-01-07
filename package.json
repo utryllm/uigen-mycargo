@@ -1,0 +1,37 @@
+{
+  "name": "uigen-mycargo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "next": "^15.1.0",
+    "ai": "^4.0.0",
+    "@ai-sdk/openai": "^1.0.0",
+    "@ai-sdk/anthropic": "^1.0.0",
+    "zustand": "^5.0.0",
+    "@codesandbox/sandpack-react": "^2.19.0",
+    "@monaco-editor/react": "^4.6.0",
+    "nanoid": "^5.0.0",
+    "clsx": "^2.1.0",
+    "tailwind-merge": "^2.5.0",
+    "lucide-react": "^0.469.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tailwindcss": "^4.0.0",
+    "@tailwindcss/postcss": "^4.0.0",
+    "postcss": "^8.4.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "^15.1.0"
+  }
+}
