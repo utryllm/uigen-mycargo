@@ -194,16 +194,16 @@ export function ChatPanel() {
     >
       <div
         style={{
-          padding: '12px 16px',
+          padding: '10px 12px',
           borderBottom: '1px solid #E0E0E0',
           backgroundColor: 'white',
           flexShrink: 0,
         }}
       >
-        <h2 style={{ fontWeight: 600, color: '#333333', fontSize: '16px', margin: 0 }}>
+        <h2 style={{ fontWeight: 600, color: '#333333', fontSize: '15px', margin: 0 }}>
           Chat
         </h2>
-        <p style={{ fontSize: '12px', color: '#666666', margin: '4px 0 0 0' }}>
+        <p style={{ fontSize: '11px', color: '#666666', margin: '2px 0 0 0' }}>
           Describe interfaces to generate
         </p>
       </div>

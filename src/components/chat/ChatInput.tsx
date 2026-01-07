@@ -117,21 +117,21 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
   };
 
   return (
-    <div className="p-4 border-t border-[#E0E0E0] bg-white">
+    <div className="p-3 sm:p-4 border-t border-[#E0E0E0] bg-white">
       {/* Command Suggestions */}
       {showCommands && (
         <div className="mb-2 bg-white border border-[#E0E0E0] rounded-lg shadow-lg overflow-hidden">
           {filteredCommands.map((cmd) => (
             <button
               key={cmd.name}
-              className="w-full px-4 py-2 text-left hover:bg-[#F5F5F5] transition-colors"
+              className="w-full px-3 sm:px-4 py-2 text-left hover:bg-[#F5F5F5] transition-colors"
               onClick={() => handleCommandSelect(cmd.name)}
             >
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-[#333333]">{cmd.name}</span>
-                <span className="text-xs text-[#999999]">{cmd.usage}</span>
+                <span className="text-xs sm:text-sm font-medium text-[#333333]">{cmd.name}</span>
+                <span className="text-[10px] sm:text-xs text-[#999999] hidden sm:inline">{cmd.usage}</span>
               </div>
-              <p className="text-xs text-[#666666] mt-0.5">{cmd.description}</p>
+              <p className="text-[10px] sm:text-xs text-[#666666] mt-0.5">{cmd.description}</p>
             </button>
           ))}
         </div>
@@ -153,17 +153,17 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
           onClick={() => fileInputRef.current?.click()}
           disabled={isDisabled}
           className={cn(
-            'h-[46px] px-3 border border-[#E0E0E0] rounded-lg',
+            'h-[40px] sm:h-[46px] px-2.5 sm:px-3 border border-[#E0E0E0] rounded-lg',
             'text-[#666666] hover:text-[#C41230] hover:border-[#C41230] hover:bg-[#F8E7EA]',
-            'transition-colors flex items-center justify-center',
+            'transition-colors flex items-center justify-center flex-shrink-0',
             'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-[#666666] disabled:hover:border-[#E0E0E0] disabled:hover:bg-transparent'
           )}
           title="Upload image as screen"
         >
-          <ImagePlus className="w-5 h-5" />
+          <ImagePlus className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
 
-        <div className="flex-1 relative">
+        <div className="flex-1 relative min-w-0">
           <textarea
             ref={textareaRef}
             value={input}
@@ -171,13 +171,13 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
             onKeyDown={handleKeyDown}
             placeholder={
               hasValidKey()
-                ? 'Describe the UI you want to create... (/ for commands)'
-                : 'Add your API key to start generating...'
+                ? 'Describe the UI... (/ for commands)'
+                : 'Add your API key to start...'
             }
             disabled={isDisabled}
             rows={1}
             className={cn(
-              'w-full px-4 py-3 pr-12 border border-[#E0E0E0] rounded-lg text-sm resize-none',
+              'w-full px-3 sm:px-4 py-2.5 sm:py-3 pr-10 sm:pr-12 border border-[#E0E0E0] rounded-lg text-xs sm:text-sm resize-none',
               'focus:outline-none focus:ring-2 focus:ring-[#C41230] focus:border-transparent',
               'placeholder:text-[#999999]',
               'disabled:bg-[#F5F5F5] disabled:cursor-not-allowed'
@@ -186,9 +186,9 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
           {!hasValidKey() && (
             <button
               onClick={() => setIsApiKeyModalOpen(true)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-[#C41230] hover:bg-[#F8E7EA] rounded"
+              className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 p-1 text-[#C41230] hover:bg-[#F8E7EA] rounded"
             >
-              <Sparkles className="w-5 h-5" />
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           )}
         </div>
@@ -197,14 +197,14 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
           onClick={handleSubmit}
           disabled={!input.trim() || isDisabled}
           isLoading={isDisabled}
-          className="h-[46px] px-4"
+          className="h-[40px] sm:h-[46px] px-3 sm:px-4 flex-shrink-0"
         >
-          <Send className="w-4 h-4" />
+          <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         </Button>
       </div>
 
-      {/* Hint */}
-      <p className="mt-2 text-xs text-[#999999]">
+      {/* Hint - hidden on mobile */}
+      <p className="mt-2 text-[10px] sm:text-xs text-[#999999] hidden sm:block">
         Press Enter to send, Shift+Enter for new line. Type / for commands.
       </p>
     </div>

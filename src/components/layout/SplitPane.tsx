@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useCallback, useRef, type ReactNode, type MouseEvent } from 'react';
+import { useState, useCallback, useRef, useEffect, type ReactNode, type MouseEvent } from 'react';
+import { MessageSquare, Monitor } from 'lucide-react';
 
 interface SplitPaneProps {
   left: ReactNode;
@@ -9,6 +10,8 @@ interface SplitPaneProps {
   minLeftWidth?: number;
   maxLeftWidth?: number;
 }
+
+const MOBILE_BREAKPOINT = 768;
 
 export function SplitPane({
   left,
@@ -19,7 +22,20 @@ export function SplitPane({
 }: SplitPaneProps) {
   const [leftWidth, setLeftWidth] = useState(defaultLeftWidth);
   const [isDragging, setIsDragging] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [activeTab, setActiveTab] = useState<'chat' | 'canvas'>('chat');
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Detect mobile viewport
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleMouseDown = useCallback(() => {
     setIsDragging(true);
@@ -43,6 +59,99 @@ export function SplitPane({
     setIsDragging(false);
   }, []);
 
+  // Mobile layout with tabs
+  if (isMobile) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
+          height: '100%',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Mobile Tab Bar */}
+        <div
+          style={{
+            display: 'flex',
+            borderBottom: '1px solid #E0E0E0',
+            backgroundColor: 'white',
+            flexShrink: 0,
+          }}
+        >
+          <button
+            onClick={() => setActiveTab('chat')}
+            style={{
+              flex: 1,
+              padding: '12px 16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              backgroundColor: activeTab === 'chat' ? '#FAFAFA' : 'white',
+              borderBottom: activeTab === 'chat' ? '2px solid #C41230' : '2px solid transparent',
+              color: activeTab === 'chat' ? '#C41230' : '#666666',
+              fontWeight: activeTab === 'chat' ? 600 : 400,
+              fontSize: '14px',
+              transition: 'all 0.15s ease',
+              cursor: 'pointer',
+              border: 'none',
+              outline: 'none',
+            }}
+          >
+            <MessageSquare style={{ width: '18px', height: '18px' }} />
+            Chat
+          </button>
+          <button
+            onClick={() => setActiveTab('canvas')}
+            style={{
+              flex: 1,
+              padding: '12px 16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              backgroundColor: activeTab === 'canvas' ? '#FAFAFA' : 'white',
+              borderBottom: activeTab === 'canvas' ? '2px solid #C41230' : '2px solid transparent',
+              color: activeTab === 'canvas' ? '#C41230' : '#666666',
+              fontWeight: activeTab === 'canvas' ? 600 : 400,
+              fontSize: '14px',
+              transition: 'all 0.15s ease',
+              cursor: 'pointer',
+              border: 'none',
+              outline: 'none',
+            }}
+          >
+            <Monitor style={{ width: '18px', height: '18px' }} />
+            Canvas
+          </button>
+        </div>
+
+        {/* Mobile Content */}
+        <div
+          style={{
+            flex: 1,
+            overflow: 'hidden',
+            display: activeTab === 'chat' ? 'block' : 'none',
+          }}
+        >
+          {left}
+        </div>
+        <div
+          style={{
+            flex: 1,
+            overflow: 'hidden',
+            display: activeTab === 'canvas' ? 'block' : 'none',
+          }}
+        >
+          {right}
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop layout with resizable split pane
   return (
     <div
       ref={containerRef}
