@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { Settings, Github, Zap } from 'lucide-react';
-import { Button } from '@/components/ui';
 import { useSettingsStore } from '@/lib/store';
+import { cn } from '@/lib/utils/cn';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -27,80 +27,51 @@ export function Header() {
   const isKeyValid = mounted ? hasValidKey() : false;
 
   return (
-    <header
-      style={{
-        height: isMobile ? '48px' : '56px',
-        minHeight: isMobile ? '48px' : '56px',
-        backgroundColor: 'white',
-        borderBottom: '1px solid #E0E0E0',
-        padding: isMobile ? '0 12px' : '0 16px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexShrink: 0,
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '8px' : '12px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div
-            style={{
-              width: isMobile ? '28px' : '32px',
-              height: isMobile ? '28px' : '32px',
-              backgroundColor: '#C41230',
-              borderRadius: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Zap style={{ width: isMobile ? '16px' : '20px', height: isMobile ? '16px' : '20px', color: 'white' }} />
+    <header className="h-14 sm:h-16 min-h-14 sm:min-h-16 bg-white border-b border-[#E0E0E0] px-3 sm:px-5 flex items-center justify-between flex-shrink-0">
+      {/* Logo and Brand */}
+      <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-2 sm:gap-2.5">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-[#C41230] rounded-xl flex items-center justify-center shadow-sm">
+            <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
-          <span style={{ fontSize: isMobile ? '16px' : '18px', fontWeight: 600, color: '#333333' }}>
+          <span className="text-lg sm:text-xl font-semibold text-[#333333]">
             UI Sim
           </span>
         </div>
         {!isMobile && (
-          <span
-            style={{
-              fontSize: '12px',
-              padding: '2px 8px',
-              backgroundColor: '#F5F5F5',
-              color: '#666666',
-              borderRadius: '9999px',
-            }}
-          >
+          <span className="text-xs px-2.5 py-1 bg-[#F5F5F5] text-[#666666] rounded-full font-medium">
             UI Generator
           </span>
         )}
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '8px' }}>
+      {/* Actions */}
+      <div className="flex items-center gap-2 sm:gap-3">
         {!isMobile && (
           <a
             href="https://github.com"
             target="_blank"
             rel="noopener noreferrer"
-            style={{
-              padding: '8px',
-              color: '#666666',
-              borderRadius: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+            className="h-10 w-10 flex items-center justify-center text-[#666666] hover:text-[#333333] hover:bg-[#F5F5F5] rounded-xl transition-colors"
           >
-            <Github style={{ width: '20px', height: '20px' }} />
+            <Github className="w-5 h-5" />
           </a>
         )}
 
-        <Button
-          variant={isKeyValid ? 'secondary' : 'primary'}
-          size="sm"
+        <button
           onClick={() => setIsApiKeyModalOpen(true)}
+          className={cn(
+            'h-10 px-3 sm:px-4 rounded-xl flex items-center justify-center gap-2 font-medium text-sm transition-all duration-200',
+            isKeyValid
+              ? 'bg-[#F5F5F5] text-[#333333] hover:bg-[#EBEBEB]'
+              : 'bg-[#C41230] text-white hover:bg-[#A30F28] shadow-sm'
+          )}
         >
-          <Settings style={{ width: '16px', height: '16px', marginRight: isMobile ? '0' : '8px' }} />
-          {!isMobile && (isKeyValid ? 'API Settings' : 'Add API Key')}
-        </Button>
+          <Settings className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
+          {!isMobile && (
+            <span>{isKeyValid ? 'API Settings' : 'Add API Key'}</span>
+          )}
+        </button>
       </div>
     </header>
   );

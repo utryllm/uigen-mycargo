@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, type KeyboardEvent, type ChangeEvent } from 'react';
-import { Send, Sparkles, ImagePlus } from 'lucide-react';
-import { Button } from '@/components/ui';
+import { Send, ImagePlus, Slash } from 'lucide-react';
 import { useSettingsStore, useChatStore, useScreensStore } from '@/lib/store';
 import { COMMANDS } from '@/types/chat';
 import { cn } from '@/lib/utils/cn';
@@ -27,7 +26,6 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
     if (!file.type.startsWith('image/')) {
       addMessage({
         role: 'assistant',
@@ -36,7 +34,6 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
       return;
     }
 
-    // Validate file size (max 10MB)
     if (file.size > 10 * 1024 * 1024) {
       addMessage({
         role: 'assistant',
@@ -45,48 +42,35 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
       return;
     }
 
-    // Create object URL for the image
     const imageUrl = URL.createObjectURL(file);
-
-    // Generate a name from the filename
     const name = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
     const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
 
-    // Add as image screen
     addImageScreen(formattedName, imageUrl, `Uploaded image: ${file.name}`);
-
-    // Add message to chat
-    addMessage({
-      role: 'user',
-      content: `📷 Uploaded image: ${file.name}`,
-    });
+    addMessage({ role: 'user', content: `Uploaded image: ${file.name}` });
     addMessage({
       role: 'assistant',
-      content: `Added "${formattedName}" as a screen. You can see it in the canvas on the right.`,
+      content: `Added "${formattedName}" as a screen. You can see it in the canvas.`,
     });
 
-    // Reset file input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
   };
 
-  // Filter commands based on input
   const filteredCommands = input.startsWith('/')
-    ? COMMANDS.filter((cmd) =>
-        cmd.name.toLowerCase().includes(input.toLowerCase())
-      )
+    ? COMMANDS.filter((cmd) => cmd.name.toLowerCase().includes(input.toLowerCase()))
     : [];
 
   useEffect(() => {
     setShowCommands(input.startsWith('/') && filteredCommands.length > 0);
   }, [input, filteredCommands.length]);
 
-  // Auto-resize textarea
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 150)}px`;
+      const newHeight = Math.min(Math.max(textareaRef.current.scrollHeight, 52), 160);
+      textareaRef.current.style.height = `${newHeight}px`;
     }
   }, [input]);
 
@@ -117,52 +101,72 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
   };
 
   return (
-    <div className="p-3 sm:p-4 border-t border-[#E0E0E0] bg-white">
+    <div className="border-t border-[#E0E0E0] bg-white p-4">
       {/* Command Suggestions */}
       {showCommands && (
-        <div className="mb-2 bg-white border border-[#E0E0E0] rounded-lg shadow-lg overflow-hidden">
+        <div className="mb-3 bg-white border border-[#E0E0E0] rounded-xl shadow-lg overflow-hidden max-h-64 overflow-y-auto">
+          <div className="px-4 py-2.5 bg-[#F8F8F8] border-b border-[#E0E0E0]">
+            <span className="text-xs font-semibold text-[#666666] uppercase tracking-wide">Commands</span>
+          </div>
           {filteredCommands.map((cmd) => (
             <button
               key={cmd.name}
-              className="w-full px-3 sm:px-4 py-2 text-left hover:bg-[#F5F5F5] transition-colors"
+              className="w-full px-4 py-3 text-left hover:bg-[#F5F5F5] transition-colors border-b border-[#F0F0F0] last:border-b-0"
               onClick={() => handleCommandSelect(cmd.name)}
             >
-              <div className="flex items-center justify-between">
-                <span className="text-xs sm:text-sm font-medium text-[#333333]">{cmd.name}</span>
-                <span className="text-[10px] sm:text-xs text-[#999999] hidden sm:inline">{cmd.usage}</span>
+              <div className="flex items-center justify-between mb-0.5">
+                <span className="text-sm font-semibold text-[#333333]">{cmd.name}</span>
+                <span className="text-xs text-[#999999] font-mono">{cmd.usage}</span>
               </div>
-              <p className="text-[10px] sm:text-xs text-[#666666] mt-0.5">{cmd.description}</p>
+              <p className="text-xs text-[#666666]">{cmd.description}</p>
             </button>
           ))}
         </div>
       )}
 
-      {/* Input Area */}
-      <div className="flex gap-2">
-        {/* Hidden file input */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-          className="hidden"
-        />
+      {/* Input Row */}
+      <div className="flex items-end gap-3">
+        {/* Left Action Buttons */}
+        <div className="flex items-center gap-1 flex-shrink-0 pb-1.5">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="hidden"
+          />
 
-        {/* Image upload button */}
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          disabled={isDisabled}
-          className={cn(
-            'h-[40px] sm:h-[46px] px-2.5 sm:px-3 border border-[#E0E0E0] rounded-lg',
-            'text-[#666666] hover:text-[#C41230] hover:border-[#C41230] hover:bg-[#F8E7EA]',
-            'transition-colors flex items-center justify-center flex-shrink-0',
-            'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-[#666666] disabled:hover:border-[#E0E0E0] disabled:hover:bg-transparent'
-          )}
-          title="Upload image as screen"
-        >
-          <ImagePlus className="w-4 h-4 sm:w-5 sm:h-5" />
-        </button>
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isDisabled}
+            className={cn(
+              'h-10 w-10 rounded-xl flex items-center justify-center transition-all',
+              'text-[#666666] hover:text-[#C41230] hover:bg-[#FEF2F4]',
+              'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#666666]'
+            )}
+            title="Upload image"
+          >
+            <ImagePlus className="w-5 h-5" />
+          </button>
 
+          <button
+            onClick={() => {
+              setInput('/');
+              textareaRef.current?.focus();
+            }}
+            disabled={isDisabled}
+            className={cn(
+              'h-10 w-10 rounded-xl flex items-center justify-center transition-all',
+              'text-[#666666] hover:text-[#C41230] hover:bg-[#FEF2F4]',
+              'disabled:opacity-50 disabled:cursor-not-allowed'
+            )}
+            title="Commands"
+          >
+            <Slash className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Text Input */}
         <div className="flex-1 relative min-w-0">
           <textarea
             ref={textareaRef}
@@ -171,41 +175,58 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
             onKeyDown={handleKeyDown}
             placeholder={
               hasValidKey()
-                ? 'Describe the UI... (/ for commands)'
+                ? 'Describe the UI you want to create...'
                 : 'Add your API key to start...'
             }
             disabled={isDisabled}
             rows={1}
             className={cn(
-              'w-full px-3 sm:px-4 py-2.5 sm:py-3 pr-10 sm:pr-12 border border-[#E0E0E0] rounded-lg text-xs sm:text-sm resize-none',
-              'focus:outline-none focus:ring-2 focus:ring-[#C41230] focus:border-transparent',
-              'placeholder:text-[#999999]',
-              'disabled:bg-[#F5F5F5] disabled:cursor-not-allowed'
+              'w-full min-h-[52px] max-h-[160px] px-4 py-3.5',
+              'bg-[#F5F5F5] rounded-2xl',
+              'text-[15px] leading-6 text-[#333333] placeholder:text-[#999999]',
+              'border-2 border-transparent',
+              'focus:outline-none focus:bg-white focus:border-[#C41230]',
+              'transition-all duration-200 resize-none',
+              'disabled:opacity-60 disabled:cursor-not-allowed'
             )}
           />
+
+          {/* API Key prompt */}
           {!hasValidKey() && (
             <button
               onClick={() => setIsApiKeyModalOpen(true)}
-              className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 p-1 text-[#C41230] hover:bg-[#F8E7EA] rounded"
+              className="absolute right-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-[#C41230] text-white text-xs font-medium rounded-lg hover:bg-[#A30F28] transition-colors whitespace-nowrap"
             >
-              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
+              Add API Key
             </button>
           )}
         </div>
 
-        <Button
-          onClick={handleSubmit}
-          disabled={!input.trim() || isDisabled}
-          isLoading={isDisabled}
-          className="h-[40px] sm:h-[46px] px-3 sm:px-4 flex-shrink-0"
-        >
-          <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-        </Button>
+        {/* Send Button */}
+        <div className="flex-shrink-0 pb-1.5">
+          <button
+            onClick={handleSubmit}
+            disabled={!input.trim() || isDisabled}
+            className={cn(
+              'h-12 w-12 rounded-2xl flex items-center justify-center transition-all duration-200',
+              input.trim() && !isDisabled
+                ? 'bg-[#C41230] text-white hover:bg-[#A30F28] shadow-md hover:shadow-lg active:scale-95'
+                : 'bg-[#E8E8E8] text-[#AAAAAA] cursor-not-allowed'
+            )}
+          >
+            {isDisabled ? (
+              <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Send className="w-5 h-5" />
+            )}
+          </button>
+        </div>
       </div>
 
-      {/* Hint - hidden on mobile */}
-      <p className="mt-2 text-[10px] sm:text-xs text-[#999999] hidden sm:block">
-        Press Enter to send, Shift+Enter for new line. Type / for commands.
+      {/* Footer hint */}
+      <p className="mt-3 text-xs text-[#999999] text-center">
+        <span className="hidden sm:inline">Enter to send, Shift+Enter for new line. </span>
+        Type <kbd className="px-1.5 py-0.5 bg-[#F0F0F0] rounded text-[10px] font-mono">/</kbd> for commands
       </p>
     </div>
   );

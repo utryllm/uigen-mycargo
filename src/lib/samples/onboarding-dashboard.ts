@@ -1,7 +1,7 @@
 export const SAMPLE_ONBOARDING_DASHBOARD = `'use client';
 
 import { useState } from 'react';
-import { RefreshCw, Plus, ChevronDown, ChevronLeft, ChevronRight, Filter, X } from 'lucide-react';
+import { RefreshCw, Plus, ChevronDown, ChevronLeft, ChevronRight, Filter, MoreVertical } from 'lucide-react';
 
 interface Request {
   id: string;
@@ -27,11 +27,6 @@ export default function OnboardingDashboard() {
     { id: '3', name: '2dedc_gsmos_testing2', requestId: 'REQ20092', creationDate: '12/02/2025', status: 'Submitted', parentLineOfBusiness: 'Corporate Investment Bank (CIB)', lineOfBusiness: 'Commercial Real Estate' },
     { id: '4', name: '2dec_gsmos_testing', requestId: 'REQ20081', creationDate: '12/02/2025', status: 'Submitted', parentLineOfBusiness: 'Corporate Investment Bank (CIB)', lineOfBusiness: 'Commercial Real Estate' },
     { id: '5', name: '1Dec_GSMOS_screening_test', requestId: 'REQ20021', creationDate: '12/01/2025', status: 'Submitted', parentLineOfBusiness: 'Commercial Banking (CB)', lineOfBusiness: 'Business Banking Group' },
-    { id: '6', name: '28_Nov_screeningresults', requestId: 'REQ19954', creationDate: '11/28/2025', status: 'Submitted', parentLineOfBusiness: 'Corporate Investment Bank (CIB)', lineOfBusiness: 'Commercial Real Estate' },
-    { id: '7', name: 'Nov_test_request', requestId: 'REQ19850', creationDate: '11/25/2025', status: 'In Progress', parentLineOfBusiness: 'Corporate Investment Bank (CIB)', lineOfBusiness: 'Markets' },
-    { id: '8', name: 'Q4_onboarding_batch', requestId: 'REQ19742', creationDate: '11/20/2025', status: 'Completed', parentLineOfBusiness: 'Wealth Management', lineOfBusiness: 'Private Banking' },
-    { id: '9', name: 'Client_verification_nov', requestId: 'REQ19680', creationDate: '11/18/2025', status: 'Pending', parentLineOfBusiness: 'Corporate Investment Bank (CIB)', lineOfBusiness: 'Commercial Real Estate' },
-    { id: '10', name: 'KYC_update_request', requestId: 'REQ19550', creationDate: '11/15/2025', status: 'Submitted', parentLineOfBusiness: 'Commercial Banking (CB)', lineOfBusiness: 'Middle Market Banking' },
   ];
 
   const totalItems = 23;
@@ -66,6 +61,16 @@ export default function OnboardingDashboard() {
     }
   };
 
+  const getStatusBgColor = (status: string) => {
+    switch (status) {
+      case 'Submitted': return 'bg-[#F5F5F5]';
+      case 'In Progress': return 'bg-[#E6F0FA]';
+      case 'Completed': return 'bg-[#E8F5E9]';
+      case 'Pending': return 'bg-[#FFF8E1]';
+      default: return 'bg-[#F5F5F5]';
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#F5F5F5]">
       {/* Header Banner */}
@@ -73,32 +78,33 @@ export default function OnboardingDashboard() {
       <div className="bg-[#FFD200] h-1" />
 
       {/* Main Content */}
-      <div className="p-6">
-        {/* Title Row */}
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-semibold text-[#333333]">Onboarding Dashboard</h1>
-          <div className="flex items-center gap-4">
-            <button className="flex items-center gap-2 px-4 py-2 border border-[#E0E0E0] rounded bg-white text-[#333333] hover:bg-[#F5F5F5] transition-colors">
-              <RefreshCw className="w-4 h-4" />
-              Refresh
+      <div className="p-3 sm:p-6">
+        {/* Title Row - Stack on mobile */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3">
+          <h1 className="text-xl sm:text-2xl font-semibold text-[#333333]">Onboarding Dashboard</h1>
+          <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
+            <button className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 border border-[#E0E0E0] rounded bg-white text-[#333333] hover:bg-[#F5F5F5] transition-colors text-xs sm:text-sm">
+              <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">Refresh</span>
             </button>
-            <button className="text-[#0066CC] hover:underline font-medium">
+            <button className="text-[#0066CC] hover:underline font-medium text-xs sm:text-sm hidden sm:block">
               Manage my team
             </button>
-            <button className="flex items-center gap-2 text-[#C41230] font-medium hover:underline">
-              <Plus className="w-4 h-4" />
-              Add new request
+            <button className="flex items-center gap-1 sm:gap-2 text-[#C41230] font-medium hover:underline text-xs sm:text-sm">
+              <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">Add new request</span>
+              <span className="sm:hidden">Add</span>
             </button>
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-0 mb-6">
+        {/* Tabs - Scrollable on mobile */}
+        <div className="flex gap-0 mb-4 sm:mb-6 overflow-x-auto -mx-3 px-3 sm:mx-0 sm:px-0">
           {(['request', 'case', 'task'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={\`px-6 py-3 font-medium capitalize border border-[#E0E0E0] transition-colors \${
+              className={\`px-3 sm:px-6 py-2 sm:py-3 font-medium capitalize border border-[#E0E0E0] transition-colors text-xs sm:text-sm whitespace-nowrap \${
                 activeTab === tab
                   ? 'bg-white text-[#333333] border-b-white -mb-px z-10'
                   : 'bg-[#F5F5F5] text-[#666666] hover:bg-[#FAFAFA]'
@@ -110,54 +116,83 @@ export default function OnboardingDashboard() {
         </div>
 
         {/* Filter Section */}
-        <div className="bg-white border border-[#E0E0E0] rounded-lg p-4 mb-4">
-          <p className="text-sm text-[#666666] mb-3">
+        <div className="bg-white border border-[#E0E0E0] rounded-lg p-3 sm:p-4 mb-3 sm:mb-4">
+          <p className="text-xs sm:text-sm text-[#666666] mb-2 sm:mb-3">
             View active requests. Select Filter to view specific requests.
           </p>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
             {(['my', 'all', 'team'] as const).map((filter) => (
               <button
                 key={filter}
                 onClick={() => setActiveFilter(filter)}
-                className={\`px-4 py-2 rounded-full text-sm font-medium transition-colors \${
+                className={\`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors \${
                   activeFilter === filter
                     ? 'bg-[#333333] text-white'
                     : 'bg-white border border-[#E0E0E0] text-[#666666] hover:bg-[#F5F5F5]'
                 }\`}
               >
-                {filter === 'my' ? 'My requests' : filter === 'all' ? 'All requests' : "My team's requests"}
+                {filter === 'my' ? 'My requests' : filter === 'all' ? 'All requests' : "Team's"}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Filters Applied */}
-        <div className="flex items-center justify-between mb-4">
-          <button className="flex items-center gap-2 px-4 py-2 bg-[#333333] text-white rounded-full text-sm">
-            <Filter className="w-4 h-4" />
-            Filters applied
+        {/* Filters Applied & Pagination */}
+        <div className="flex items-center justify-between mb-3 sm:mb-4 flex-wrap gap-2">
+          <button className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-[#333333] text-white rounded-full text-xs sm:text-sm">
+            <Filter className="w-3 h-3 sm:w-4 sm:h-4" />
+            Filters
           </button>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-[#666666]">1 to 10 of {totalItems}</span>
-            <ChevronDown className="w-4 h-4 text-[#666666]" />
+          <div className="flex items-center gap-1 sm:gap-2">
+            <span className="text-xs sm:text-sm text-[#666666]">1-10 of {totalItems}</span>
             <button
               onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
               className="p-1 rounded border border-[#E0E0E0] hover:bg-[#F5F5F5]"
             >
-              <ChevronLeft className="w-4 h-4 text-[#666666]" />
+              <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4 text-[#666666]" />
             </button>
             <button
               onClick={() => setCurrentPage(currentPage + 1)}
               className="p-1 rounded border border-[#E0E0E0] hover:bg-[#F5F5F5]"
             >
-              <ChevronRight className="w-4 h-4 text-[#666666]" />
+              <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-[#666666]" />
             </button>
           </div>
         </div>
 
-        {/* Data Table */}
-        <div className="bg-white border border-[#E0E0E0] rounded-lg overflow-hidden">
-          <table className="w-full">
+        {/* Mobile Card View */}
+        <div className="sm:hidden space-y-3">
+          {requests.map((request) => (
+            <div
+              key={request.id}
+              className="bg-white border border-[#E0E0E0] rounded-lg p-3"
+            >
+              <div className="flex items-start justify-between mb-2">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-medium text-sm text-[#333333] truncate">{request.name}</h3>
+                  <p className="text-xs text-[#666666]">{request.requestId}</p>
+                </div>
+                <button className="p-1 text-[#666666]">
+                  <MoreVertical className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="flex items-center gap-2 mb-2">
+                <span className={\`px-2 py-0.5 rounded-full text-xs font-medium \${getStatusColor(request.status)} \${getStatusBgColor(request.status)}\`}>
+                  {request.status}
+                </span>
+                <span className="text-xs text-[#666666]">{request.creationDate}</span>
+              </div>
+              <p className="text-xs text-[#666666] truncate mb-2">{request.parentLineOfBusiness}</p>
+              <button className="text-[#0066CC] text-xs font-medium hover:underline">
+                Continue
+              </button>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop Data Table */}
+        <div className="hidden sm:block bg-white border border-[#E0E0E0] rounded-lg overflow-hidden overflow-x-auto">
+          <table className="w-full min-w-[800px]">
             <thead className="bg-[#F5F5F5] border-b border-[#E0E0E0]">
               <tr>
                 <th className="w-8 px-2 py-3"></th>
@@ -184,7 +219,7 @@ export default function OnboardingDashboard() {
                   onClick={() => handleSort('creationDate')}
                 >
                   <div className="flex items-center gap-1">
-                    Request Creation Date
+                    Date
                     <ChevronDown className="w-3 h-3" />
                   </div>
                 </th>
@@ -193,7 +228,7 @@ export default function OnboardingDashboard() {
                   onClick={() => handleSort('status')}
                 >
                   <div className="flex items-center gap-1">
-                    Request Status
+                    Status
                     <ChevronDown className="w-3 h-3" />
                   </div>
                 </th>
@@ -202,16 +237,7 @@ export default function OnboardingDashboard() {
                   onClick={() => handleSort('parentLineOfBusiness')}
                 >
                   <div className="flex items-center gap-1">
-                    Parent Line of Business
-                    <ChevronDown className="w-3 h-3" />
-                  </div>
-                </th>
-                <th
-                  className="px-4 py-3 text-left text-sm font-medium text-[#666666] cursor-pointer hover:text-[#333333]"
-                  onClick={() => handleSort('lineOfBusiness')}
-                >
-                  <div className="flex items-center gap-1">
-                    Line of Business
+                    Parent LOB
                     <ChevronDown className="w-3 h-3" />
                   </div>
                 </th>
@@ -241,8 +267,7 @@ export default function OnboardingDashboard() {
                   <td className={\`px-4 py-3 text-sm \${getStatusColor(request.status)}\`}>
                     {request.status}
                   </td>
-                  <td className="px-4 py-3 text-sm text-[#333333]">{request.parentLineOfBusiness}</td>
-                  <td className="px-4 py-3 text-sm text-[#333333]">{request.lineOfBusiness}</td>
+                  <td className="px-4 py-3 text-sm text-[#333333] max-w-[200px] truncate">{request.parentLineOfBusiness}</td>
                   <td className="px-4 py-3">
                     <button className="text-[#0066CC] text-sm font-medium hover:underline">
                       Continue
@@ -255,19 +280,19 @@ export default function OnboardingDashboard() {
         </div>
 
         {/* Footer Pagination */}
-        <div className="flex items-center justify-end mt-4 gap-2">
-          <span className="text-sm text-[#666666]">Page {currentPage} of {Math.ceil(totalItems / itemsPerPage)}</span>
+        <div className="flex items-center justify-end mt-3 sm:mt-4 gap-2">
+          <span className="text-xs sm:text-sm text-[#666666]">Page {currentPage} of {Math.ceil(totalItems / itemsPerPage)}</span>
           <button
             onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
             disabled={currentPage === 1}
-            className="px-3 py-1 border border-[#E0E0E0] rounded text-sm text-[#666666] hover:bg-[#F5F5F5] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-2 sm:px-3 py-1 border border-[#E0E0E0] rounded text-xs sm:text-sm text-[#666666] hover:bg-[#F5F5F5] disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Previous
+            Prev
           </button>
           <button
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage >= Math.ceil(totalItems / itemsPerPage)}
-            className="px-3 py-1 border border-[#E0E0E0] rounded text-sm text-[#666666] hover:bg-[#F5F5F5] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-2 sm:px-3 py-1 border border-[#E0E0E0] rounded text-xs sm:text-sm text-[#666666] hover:bg-[#F5F5F5] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next
           </button>

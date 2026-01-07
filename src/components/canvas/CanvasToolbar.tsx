@@ -2,8 +2,8 @@
 
 import { Code, Eye, Download, Share2, Copy, Check } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui';
 import { useScreensStore } from '@/lib/store';
+import { cn } from '@/lib/utils/cn';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -56,99 +56,72 @@ export function CanvasToolbar({ onExport }: CanvasToolbarProps) {
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: isMobile ? '6px 8px' : '8px 16px',
-        backgroundColor: 'white',
-        borderBottom: '1px solid #E0E0E0',
-        flexShrink: 0,
-        gap: '8px',
-      }}
-    >
-      {/* View Toggle */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '2px',
-          padding: '3px',
-          backgroundColor: '#F5F5F5',
-          borderRadius: '6px',
-        }}
-      >
+    <div className="flex items-center justify-between h-12 sm:h-14 px-3 sm:px-4 bg-white border-b border-[#E0E0E0] flex-shrink-0 gap-2">
+      {/* View Toggle - Segmented control style */}
+      <div className="flex items-center gap-1 p-1 bg-[#F5F5F5] rounded-xl">
         <button
           onClick={() => setViewMode('preview')}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: isMobile ? '4px' : '8px',
-            padding: isMobile ? '4px 8px' : '6px 12px',
-            borderRadius: '4px',
-            fontSize: isMobile ? '12px' : '14px',
-            fontWeight: 500,
-            border: 'none',
-            cursor: 'pointer',
-            transition: 'all 0.15s',
-            backgroundColor: currentViewMode === 'preview' ? 'white' : 'transparent',
-            color: currentViewMode === 'preview' ? '#333333' : '#666666',
-            boxShadow: currentViewMode === 'preview' ? '0 1px 2px rgba(0,0,0,0.05)' : 'none',
-          }}
+          className={cn(
+            'h-8 sm:h-9 px-3 sm:px-4 flex items-center gap-1.5 sm:gap-2 rounded-lg text-sm font-medium transition-all duration-200',
+            currentViewMode === 'preview'
+              ? 'bg-white text-[#333333] shadow-sm'
+              : 'text-[#666666] hover:text-[#333333]'
+          )}
         >
-          <Eye style={{ width: isMobile ? '14px' : '16px', height: isMobile ? '14px' : '16px' }} />
-          {!isMobile && 'Preview'}
+          <Eye className="w-4 h-4" />
+          <span className="hidden sm:inline">Preview</span>
         </button>
         <button
           onClick={() => setViewMode('code')}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: isMobile ? '4px' : '8px',
-            padding: isMobile ? '4px 8px' : '6px 12px',
-            borderRadius: '4px',
-            fontSize: isMobile ? '12px' : '14px',
-            fontWeight: 500,
-            border: 'none',
-            cursor: 'pointer',
-            transition: 'all 0.15s',
-            backgroundColor: currentViewMode === 'code' ? 'white' : 'transparent',
-            color: currentViewMode === 'code' ? '#333333' : '#666666',
-            boxShadow: currentViewMode === 'code' ? '0 1px 2px rgba(0,0,0,0.05)' : 'none',
-          }}
+          className={cn(
+            'h-8 sm:h-9 px-3 sm:px-4 flex items-center gap-1.5 sm:gap-2 rounded-lg text-sm font-medium transition-all duration-200',
+            currentViewMode === 'code'
+              ? 'bg-white text-[#333333] shadow-sm'
+              : 'text-[#666666] hover:text-[#333333]'
+          )}
         >
-          <Code style={{ width: isMobile ? '14px' : '16px', height: isMobile ? '14px' : '16px' }} />
-          {!isMobile && 'Code'}
+          <Code className="w-4 h-4" />
+          <span className="hidden sm:inline">Code</span>
         </button>
       </div>
 
       {/* Actions */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '8px' }}>
+      <div className="flex items-center gap-1.5 sm:gap-2">
         {currentViewMode === 'code' && activeScreen?.code && (
           <>
-            <Button variant="ghost" size="sm" onClick={handleCopyCode}>
-              {copied ? (
-                <Check style={{ width: '16px', height: '16px', color: '#28A745' }} />
-              ) : (
-                <Copy style={{ width: '16px', height: '16px' }} />
+            <button
+              onClick={handleCopyCode}
+              className={cn(
+                'h-9 sm:h-10 px-3 sm:px-4 flex items-center gap-1.5 rounded-xl text-sm font-medium transition-all duration-200',
+                'text-[#666666] hover:text-[#333333] hover:bg-[#F5F5F5]',
+                copied && 'text-[#28A745]'
               )}
-              {!isMobile && (copied ? ' Copied!' : ' Copy')}
-            </Button>
-            {!isMobile && (
-              <Button variant="ghost" size="sm" onClick={handleDownloadCode}>
-                <Download style={{ width: '16px', height: '16px', marginRight: '4px' }} />
-                Download
-              </Button>
-            )}
+            >
+              {copied ? (
+                <Check className="w-4 h-4" />
+              ) : (
+                <Copy className="w-4 h-4" />
+              )}
+              <span className="hidden sm:inline">{copied ? 'Copied!' : 'Copy'}</span>
+            </button>
+            <button
+              onClick={handleDownloadCode}
+              className="hidden sm:flex h-10 px-4 items-center gap-1.5 rounded-xl text-sm font-medium text-[#666666] hover:text-[#333333] hover:bg-[#F5F5F5] transition-all duration-200"
+            >
+              <Download className="w-4 h-4" />
+              Download
+            </button>
           </>
         )}
 
         {hasScreens && (
-          <Button variant="secondary" size="sm" onClick={onExport}>
-            <Share2 style={{ width: '16px', height: '16px', marginRight: isMobile ? '0' : '4px' }} />
-            {!isMobile && 'Export'}
-          </Button>
+          <button
+            onClick={onExport}
+            className="h-9 sm:h-10 px-3 sm:px-4 flex items-center gap-1.5 rounded-xl text-sm font-medium bg-[#F5F5F5] text-[#333333] hover:bg-[#EBEBEB] transition-all duration-200"
+          >
+            <Share2 className="w-4 h-4" />
+            <span className="hidden sm:inline">Export</span>
+          </button>
         )}
       </div>
     </div>

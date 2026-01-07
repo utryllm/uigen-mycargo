@@ -148,8 +148,8 @@ export function ApiKeyModal() {
         />
 
         {/* Test Connection */}
-        <div className="flex items-center justify-between pt-4 border-t border-[#E0E0E0]">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between pt-4 border-t border-[#E0E0E0] gap-3">
+          <div className="flex items-center gap-2 min-h-[24px]">
             {testStatus === 'success' && (
               <>
                 <CheckCircle className="w-5 h-5 text-[#28A745]" />
@@ -164,17 +164,20 @@ export function ApiKeyModal() {
             )}
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 sm:gap-3">
             <Button
               variant="secondary"
+              size="md"
               onClick={handleTestConnection}
               disabled={!currentKey || testStatus === 'testing'}
               isLoading={testStatus === 'testing'}
+              className="flex-1 sm:flex-initial h-11"
             >
               <Key className="w-4 h-4 mr-2" />
-              Test Connection
+              <span className="hidden sm:inline">Test Connection</span>
+              <span className="sm:hidden">Test</span>
             </Button>
-            <Button onClick={() => setIsApiKeyModalOpen(false)}>
+            <Button size="md" onClick={() => setIsApiKeyModalOpen(false)} className="flex-1 sm:flex-initial h-11">
               Done
             </Button>
           </div>

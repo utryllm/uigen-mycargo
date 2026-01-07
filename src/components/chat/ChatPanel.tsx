@@ -184,28 +184,17 @@ export function ChatPanel() {
   );
 
   return (
-    <div
-      style={{
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        backgroundColor: '#FAFAFA',
-      }}
-    >
-      <div
-        style={{
-          padding: '10px 12px',
-          borderBottom: '1px solid #E0E0E0',
-          backgroundColor: 'white',
-          flexShrink: 0,
-        }}
-      >
-        <h2 style={{ fontWeight: 600, color: '#333333', fontSize: '15px', margin: 0 }}>
-          Chat
-        </h2>
-        <p style={{ fontSize: '11px', color: '#666666', margin: '2px 0 0 0' }}>
-          Describe interfaces to generate
-        </p>
+    <div className="h-full flex flex-col bg-[#FAFAFA]">
+      {/* Header - Standard 56px height on desktop, 48px on mobile */}
+      <div className="flex items-center justify-between px-4 sm:px-5 h-12 sm:h-14 border-b border-[#E0E0E0] bg-white flex-shrink-0">
+        <div>
+          <h2 className="font-semibold text-[#333333] text-base sm:text-lg">
+            Chat
+          </h2>
+          <p className="text-xs text-[#666666] hidden sm:block">
+            Describe interfaces to generate
+          </p>
+        </div>
       </div>
       <MessageList />
       <ChatInput onSubmit={handleSubmit} />

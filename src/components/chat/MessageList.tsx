@@ -17,47 +17,25 @@ export function MessageList() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Show empty state on server and initial client render
   const displayMessages = mounted ? messages : [];
 
   if (displayMessages.length === 0) {
     return (
-      <div
-        style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '32px',
-          textAlign: 'center',
-        }}
-      >
-        <div
-          style={{
-            width: '64px',
-            height: '64px',
-            backgroundColor: '#F5F5F5',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginBottom: '16px',
-          }}
-        >
-          <Bot style={{ width: '32px', height: '32px', color: '#666666' }} />
+      <div className="flex-1 flex flex-col items-center justify-center p-6 sm:p-8 text-center">
+        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-[#C41230] to-[#E91E63] rounded-2xl flex items-center justify-center mb-5 shadow-lg">
+          <Bot className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
         </div>
-        <h3 style={{ fontSize: '18px', fontWeight: 500, color: '#333333', marginBottom: '8px' }}>
+        <h3 className="text-lg sm:text-xl font-semibold text-[#333333] mb-2">
           Start Building Your UI
         </h3>
-        <p style={{ fontSize: '14px', color: '#666666', maxWidth: '280px' }}>
+        <p className="text-sm text-[#666666] max-w-[300px] mb-6">
           Describe the interface you want to create, and I will generate it for you in real-time.
         </p>
-        <div style={{ marginTop: '24px', textAlign: 'left' }}>
-          <p style={{ fontSize: '12px', color: '#999999', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px' }}>
+        <div className="w-full max-w-[320px]">
+          <p className="text-xs font-semibold text-[#999999] uppercase tracking-wider mb-3">
             Try saying:
           </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div className="flex flex-col gap-2">
             {[
               'Create a dashboard with user metrics',
               'Build an orders table with filters',
@@ -65,15 +43,9 @@ export function MessageList() {
             ].map((suggestion) => (
               <div
                 key={suggestion}
-                style={{
-                  padding: '8px 12px',
-                  backgroundColor: '#F5F5F5',
-                  borderRadius: '8px',
-                  fontSize: '14px',
-                  color: '#666666',
-                }}
+                className="px-4 py-3 bg-[#F5F5F5] hover:bg-[#EEEEEE] rounded-xl text-sm text-[#555555] transition-colors cursor-default text-left"
               >
-                &quot;{suggestion}&quot;
+                &ldquo;{suggestion}&rdquo;
               </div>
             ))}
           </div>
@@ -83,64 +55,42 @@ export function MessageList() {
   }
 
   return (
-    <div
-      style={{
-        flex: 1,
-        overflowY: 'auto',
-        padding: '16px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '16px',
-      }}
-    >
+    <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
       {displayMessages.map((message) => (
         <div
           key={message.id}
-          style={{
-            display: 'flex',
-            flexDirection: message.role === 'user' ? 'row-reverse' : 'row',
-            gap: '12px',
-          }}
+          className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
         >
           {/* Avatar */}
           <div
-            style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: '50%',
-              flexShrink: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: message.role === 'user' ? '#C41230' : '#F5F5F5',
-              color: message.role === 'user' ? 'white' : '#666666',
-            }}
+            className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex-shrink-0 flex items-center justify-center ${
+              message.role === 'user'
+                ? 'bg-[#C41230] text-white'
+                : 'bg-[#F0F0F0] text-[#666666]'
+            }`}
           >
             {message.role === 'user' ? (
-              <User style={{ width: '16px', height: '16px' }} />
+              <User className="w-5 h-5" />
             ) : (
-              <Bot style={{ width: '16px', height: '16px' }} />
+              <Bot className="w-5 h-5" />
             )}
           </div>
 
           {/* Message Content */}
           <div
-            style={{
-              maxWidth: '80%',
-              borderRadius: '8px',
-              padding: '8px 16px',
-              backgroundColor: message.role === 'user' ? '#C41230' : 'white',
-              color: message.role === 'user' ? 'white' : '#333333',
-              border: message.role === 'user' ? 'none' : '1px solid #E0E0E0',
-            }}
+            className={`max-w-[85%] sm:max-w-[80%] rounded-2xl px-4 py-3 ${
+              message.role === 'user'
+                ? 'bg-[#C41230] text-white rounded-br-md'
+                : 'bg-white border border-[#E0E0E0] text-[#333333] rounded-bl-md shadow-sm'
+            }`}
           >
-            <p style={{ fontSize: '14px', whiteSpace: 'pre-wrap', margin: 0 }}>
+            <p className="text-[14px] sm:text-[15px] leading-relaxed whitespace-pre-wrap">
               {message.content}
             </p>
             {message.isStreaming && (
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', marginTop: '4px' }}>
-                <Loader2 style={{ width: '12px', height: '12px', animation: 'spin 1s linear infinite' }} />
-                <span style={{ fontSize: '12px', opacity: 0.7 }}>Generating...</span>
+              <span className="inline-flex items-center gap-1.5 mt-2 text-xs opacity-75">
+                <Loader2 className="w-3 h-3 animate-spin" />
+                Generating...
               </span>
             )}
           </div>
@@ -148,31 +98,14 @@ export function MessageList() {
       ))}
 
       {isLoading && (
-        <div style={{ display: 'flex', gap: '12px' }}>
-          <div
-            style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: '50%',
-              backgroundColor: '#F5F5F5',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Bot style={{ width: '16px', height: '16px', color: '#666666' }} />
+        <div className="flex gap-3">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#F0F0F0] flex items-center justify-center flex-shrink-0">
+            <Bot className="w-5 h-5 text-[#666666]" />
           </div>
-          <div
-            style={{
-              backgroundColor: 'white',
-              border: '1px solid #E0E0E0',
-              borderRadius: '8px',
-              padding: '8px 16px',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Loader2 style={{ width: '16px', height: '16px', color: '#666666', animation: 'spin 1s linear infinite' }} />
-              <span style={{ fontSize: '14px', color: '#666666' }}>Thinking...</span>
+          <div className="bg-white border border-[#E0E0E0] rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
+            <div className="flex items-center gap-2">
+              <Loader2 className="w-4 h-4 text-[#666666] animate-spin" />
+              <span className="text-sm text-[#666666]">Thinking...</span>
             </div>
           </div>
         </div>

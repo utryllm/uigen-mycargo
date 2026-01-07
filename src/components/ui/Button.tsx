@@ -5,25 +5,26 @@ import { cn } from '@/lib/utils/cn';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'ghost' | 'link';
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'icon';
   isLoading?: boolean;
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading, disabled, children, ...props }, ref) => {
-    const baseStyles = 'inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+    const baseStyles = 'inline-flex items-center justify-center font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]';
 
     const variants = {
-      primary: 'bg-[#C41230] text-white hover:bg-[#A30F28] focus:ring-[#C41230]',
+      primary: 'bg-[#C41230] text-white hover:bg-[#A30F28] focus:ring-[#C41230] shadow-sm',
       secondary: 'bg-white border border-[#E0E0E0] text-[#333333] hover:bg-[#F5F5F5] focus:ring-[#E0E0E0]',
-      ghost: 'bg-transparent text-[#333333] hover:bg-[#F5F5F5] focus:ring-[#E0E0E0]',
-      link: 'bg-transparent text-[#0066CC] hover:text-[#0052A3] underline-offset-4 hover:underline focus:ring-[#0066CC]',
+      ghost: 'bg-transparent text-[#666666] hover:bg-[#F5F5F5] hover:text-[#333333] focus:ring-[#E0E0E0]',
+      link: 'bg-transparent text-[#0066CC] hover:text-[#0052A3] underline-offset-4 hover:underline focus:ring-[#0066CC] p-0',
     };
 
     const sizes = {
-      sm: 'px-3 py-1.5 text-sm rounded',
-      md: 'px-4 py-2 text-sm rounded',
-      lg: 'px-6 py-3 text-base rounded-lg',
+      sm: 'h-8 px-3 text-sm rounded-lg gap-1.5',
+      md: 'h-10 px-4 text-sm rounded-lg gap-2',
+      lg: 'h-12 px-6 text-base rounded-xl gap-2',
+      icon: 'h-10 w-10 rounded-lg',
     };
 
     return (
@@ -36,7 +37,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {isLoading ? (
           <>
             <svg
-              className="animate-spin -ml-1 mr-2 h-4 w-4"
+              className="animate-spin h-4 w-4"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -55,7 +56,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               />
             </svg>
-            Loading...
+            <span className="hidden sm:inline">Loading...</span>
           </>
         ) : (
           children
