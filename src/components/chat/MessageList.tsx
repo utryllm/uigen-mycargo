@@ -61,7 +61,7 @@ export function MessageList() {
               Build Your UI
             </h3>
             <p className="text-[13px] sm:text-sm text-[#666666] leading-relaxed">
-              Describe what you want to create, and I'll generate beautiful, interactive React components for you.
+              Describe what you want to create, and I&apos;ll generate beautiful, interactive React components for you.
             </p>
           </div>
 
