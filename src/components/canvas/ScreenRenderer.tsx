@@ -67,13 +67,30 @@ export function ScreenRenderer() {
   const [sandpackKey, setSandpackKey] = useState(0);
   const lastCodeRef = useRef<string>('');
 
-  const { screens, activeScreenId, isGenerating, streamingCode } = useScreensStore();
+  const { screens, activeScreenId, isGenerating, streamingCode, navigateToPrototypeScreen } = useScreensStore();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const activeScreen = mounted ? screens.find((s) => s.id === activeScreenId) : null;
+
+  // Listen for postMessage navigation events from Sandpack iframe
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      // Handle navigation messages from prototype screens
+      if (event.data?.type === 'NAVIGATE' && event.data.screenId) {
+        const currentScreen = screens.find((s) => s.id === activeScreenId);
+        if (currentScreen?.prototypeId) {
+          navigateToPrototypeScreen(currentScreen.prototypeId, event.data.screenId);
+        }
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [activeScreenId, screens, navigateToPrototypeScreen]);
+
   const currentIsGenerating = mounted ? isGenerating : false;
   const currentStreamingCode = mounted ? streamingCode : '';
 

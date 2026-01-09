@@ -1,20 +1,45 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { MessageList } from './MessageList';
 import { ChatInput } from './ChatInput';
+import { SampleSelectorModal } from './SampleSelectorModal';
 import { useChatStore, useScreensStore, useSettingsStore } from '@/lib/store';
 import { parseCodeFromResponse, extractCodeFromStream } from '@/lib/ai/parser';
 import { getComponentNameFromPrompt } from '@/lib/ai/prompts/system';
 import { SAMPLE_ONBOARDING_DASHBOARD, SAMPLE_SCREEN_NAME, SAMPLE_SCREEN_DESCRIPTION } from '@/lib/samples/onboarding-dashboard';
+import { PROTOTYPES } from '@/lib/samples';
+import type { PrototypeKey } from '@/types/prototype';
+import { Sparkles, MoreHorizontal } from 'lucide-react';
 
 export function ChatPanel() {
   const { addMessage, updateMessage, setMessageStreaming, setIsLoading, clearHistory } = useChatStore();
-  const { addScreen, setIsGenerating, setStreamingCode, finalizeScreen, screens, clearScreens, activeScreenId, updateScreen } = useScreensStore();
+  const { addScreen, setIsGenerating, setStreamingCode, finalizeScreen, screens, clearScreens, activeScreenId, updateScreen, loadPrototype } = useScreensStore();
   const { provider, model, getActiveKey } = useSettingsStore();
+  const [showSampleModal, setShowSampleModal] = useState(false);
 
   // Get the currently active screen
   const activeScreen = screens.find(s => s.id === activeScreenId);
+
+  // Handle prototype loading
+  const handleLoadPrototype = useCallback((persona: PrototypeKey) => {
+    const prototype = PROTOTYPES[persona];
+    if (!prototype) return;
+
+    addMessage({ role: 'user', content: `/sample ${persona}` });
+
+    // Load the prototype screens
+    const screenIds = loadPrototype(prototype);
+
+    // Build feature list for message
+    const featureList = prototype.screens.map(s => `• ${s.name}`).join('\n');
+
+    addMessage({
+      role: 'assistant',
+      content: `Loaded "${prototype.name}" prototype with ${prototype.screens.length} interactive screens:\n\n${featureList}\n\nClick the tabs in the preview to navigate between screens. You can also use the chat to modify any screen!`,
+      screenId: screenIds[0],
+    });
+  }, [addMessage, loadPrototype]);
 
   const handleSubmit = useCallback(
     async (message: string) => {
@@ -25,8 +50,8 @@ export function ChatPanel() {
         clearScreens();
         // Clear localStorage as well
         if (typeof window !== 'undefined') {
-          localStorage.removeItem('uigen-chat');
-          localStorage.removeItem('uigen-screens');
+          localStorage.removeItem('lumina-chat');
+          localStorage.removeItem('lumina-screens');
         }
         return;
       }
@@ -51,22 +76,35 @@ export function ChatPanel() {
         return;
       }
 
-      // Handle /sample command - load sample dashboard
-      if (message.toLowerCase() === '/sample') {
-        addMessage({ role: 'user', content: message });
+      // Handle /sample commands
+      const sampleMatch = message.toLowerCase().match(/^\/sample(?:\s+(business|retail|old))?$/);
+      if (sampleMatch) {
+        const persona = sampleMatch[1] as PrototypeKey | 'old' | undefined;
 
-        // Create the sample screen
-        const screenId = addScreen({
-          name: SAMPLE_SCREEN_NAME,
-          code: SAMPLE_ONBOARDING_DASHBOARD,
-          description: SAMPLE_SCREEN_DESCRIPTION,
-        });
+        // /sample business or /sample retail - load specific prototype
+        if (persona === 'business' || persona === 'retail') {
+          handleLoadPrototype(persona);
+          return;
+        }
 
-        addMessage({
-          role: 'assistant',
-          content: `Loaded sample "${SAMPLE_SCREEN_NAME}" screen. This is an interactive enterprise onboarding dashboard with:\n\n• Tab navigation (Request, Case, Task views)\n• Filter chips (My requests, All requests, Team requests)\n• Sortable data table with pagination\n• Expandable rows\n• Action buttons\n\nYou can interact with all the elements. Try clicking the tabs, filters, or sorting the columns!`,
-          screenId,
-        });
+        // /sample old - load legacy sample
+        if (persona === 'old') {
+          addMessage({ role: 'user', content: message });
+          const screenId = addScreen({
+            name: SAMPLE_SCREEN_NAME,
+            code: SAMPLE_ONBOARDING_DASHBOARD,
+            description: SAMPLE_SCREEN_DESCRIPTION,
+          });
+          addMessage({
+            role: 'assistant',
+            content: `Loaded sample "${SAMPLE_SCREEN_NAME}" screen. This is an interactive enterprise onboarding dashboard.`,
+            screenId,
+          });
+          return;
+        }
+
+        // /sample (no argument) - show modal
+        setShowSampleModal(true);
         return;
       }
 
@@ -180,24 +218,48 @@ export function ChatPanel() {
         setIsGenerating(false);
       }
     },
-    [activeScreen, addMessage, addScreen, clearHistory, clearScreens, finalizeScreen, getActiveKey, model, provider, screens, setIsGenerating, setIsLoading, setMessageStreaming, setStreamingCode, updateMessage]
+    [activeScreen, addMessage, addScreen, clearHistory, clearScreens, finalizeScreen, getActiveKey, handleLoadPrototype, model, provider, screens, setIsGenerating, setIsLoading, setMessageStreaming, setStreamingCode, updateMessage]
   );
 
   return (
-    <div className="h-full flex flex-col bg-[#FAFAFA]">
-      {/* Header - Standard 56px height on desktop, 48px on mobile */}
-      <div className="flex items-center justify-between px-4 sm:px-5 h-12 sm:h-14 border-b border-[#E0E0E0] bg-white flex-shrink-0">
-        <div>
-          <h2 className="font-semibold text-[#333333] text-base sm:text-lg">
-            Chat
-          </h2>
-          <p className="text-xs text-[#666666] hidden sm:block">
-            Describe interfaces to generate
-          </p>
+    <div className="h-full flex flex-col bg-gradient-to-b from-[#FAFAFA] to-[#F5F5F5]">
+      {/* Header - Modern gradient with icon */}
+      <div className="relative overflow-hidden bg-white border-b border-[#E8E8E8] flex-shrink-0">
+        {/* Subtle gradient accent */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#C41230]/5 via-transparent to-[#FFD200]/5" />
+
+        <div className="relative flex items-center justify-between px-4 sm:px-5 h-14 sm:h-16">
+          <div className="flex items-center gap-3">
+            {/* Icon */}
+            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-[#C41230] to-[#E91E63] rounded-xl flex items-center justify-center shadow-sm">
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+            </div>
+            <div>
+              <h2 className="font-semibold text-[#1A1A1A] text-[15px] sm:text-base">
+                AI Assistant
+              </h2>
+              <p className="text-[11px] sm:text-xs text-[#666666]">
+                Describe your UI to generate
+              </p>
+            </div>
+          </div>
+
+          {/* Menu button */}
+          <button className="w-8 h-8 rounded-lg hover:bg-[#F5F5F5] flex items-center justify-center transition-colors">
+            <MoreHorizontal className="w-4 h-4 text-[#666666]" />
+          </button>
         </div>
       </div>
+
       <MessageList />
       <ChatInput onSubmit={handleSubmit} />
+
+      {/* Sample Selector Modal */}
+      <SampleSelectorModal
+        isOpen={showSampleModal}
+        onClose={() => setShowSampleModal(false)}
+        onSelectPrototype={handleLoadPrototype}
+      />
     </div>
   );
 }

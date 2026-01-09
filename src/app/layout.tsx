@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'UI Sim - AI UI Generator',
-  description: 'Generate enterprise dashboard UIs with AI',
+  title: 'Lumina UI - AI-Powered Interface Generator',
+  description: 'Generate beautiful, interactive UI components with AI. Build dashboards, forms, and prototypes instantly.',
 };
 
 export const viewport: Viewport = {

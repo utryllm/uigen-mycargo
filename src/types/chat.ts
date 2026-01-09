@@ -33,5 +33,7 @@ export const COMMANDS: Command[] = [
   { name: '/rename', description: 'Rename a screen', usage: '/rename [old name] [new name]' },
   { name: '/export', description: 'Export prototype', usage: '/export' },
   { name: '/clear', description: 'Clear chat history', usage: '/clear' },
-  { name: '/sample', description: 'Load sample dashboard screen', usage: '/sample' },
+  { name: '/sample', description: 'Open sample prototype selector', usage: '/sample' },
+  { name: '/sample business', description: 'Load Business Owner banking prototype', usage: '/sample business' },
+  { name: '/sample retail', description: 'Load Retail Customer banking prototype', usage: '/sample retail' },
 ];

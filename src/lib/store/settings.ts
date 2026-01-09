@@ -45,7 +45,7 @@ export const useSettingsStore = create<SettingsStore>()(
       },
     }),
     {
-      name: 'uigen-settings',
+      name: 'lumina-settings',
       partialize: (state) => ({
         provider: state.provider,
         openaiKey: state.openaiKey,

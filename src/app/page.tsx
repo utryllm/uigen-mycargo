@@ -15,10 +15,14 @@ export default function Home() {
   // Prevent hydration mismatch by not rendering until mounted
   if (!mounted) {
     return (
-      <div className="h-screen w-screen flex items-center justify-center bg-gray-100">
+      <div className="h-screen w-screen flex items-center justify-center bg-gradient-to-br from-[#FAFAFA] to-[#F0F0F0]">
         <div className="text-center">
-          <div className="w-8 h-8 border-2 border-red-700 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 text-sm">Loading UI Sim...</p>
+          <div className="w-12 h-12 bg-gradient-to-br from-[#C41230] to-[#E91E63] rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#C41230]/20 animate-pulse">
+            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+            </svg>
+          </div>
+          <p className="text-[#666666] text-sm font-medium">Loading Lumina UI...</p>
         </div>
       </div>
     );

@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { nanoid } from 'nanoid';
 import type { ScreensState, ScreensActions, Screen } from '@/types/screen';
+import type { Prototype } from '@/types/prototype';
 
 type ScreensStore = ScreensState & ScreensActions;
 
@@ -122,9 +123,72 @@ export const useScreensStore = create<ScreensStore>()(
           isGenerating: false,
         });
       },
+
+      loadPrototype: (prototype: Prototype) => {
+        const screenIds: string[] = [];
+        const now = new Date();
+
+        // Clear any existing screens from this prototype
+        set((state) => ({
+          screens: state.screens.filter((s) => s.prototypeId !== prototype.id),
+        }));
+
+        // Create all screens from the prototype
+        const newScreens: Screen[] = prototype.screens.map((protoScreen) => {
+          const id = nanoid();
+          screenIds.push(id);
+          return {
+            id,
+            name: protoScreen.name,
+            code: protoScreen.code,
+            description: protoScreen.description,
+            type: 'code' as const,
+            prototypeId: prototype.id,
+            prototypeScreenId: protoScreen.id,
+            createdAt: now,
+            updatedAt: now,
+          };
+        });
+
+        set((state) => ({
+          screens: [...state.screens, ...newScreens],
+          activeScreenId: screenIds[0],
+        }));
+
+        return screenIds;
+      },
+
+      navigateToPrototypeScreen: (prototypeId: string, screenId: string) => {
+        const screens = get().screens;
+        const targetScreen = screens.find(
+          (s) => s.prototypeId === prototypeId && s.prototypeScreenId === screenId
+        );
+        if (targetScreen) {
+          set({ activeScreenId: targetScreen.id });
+        }
+      },
+
+      clearPrototype: (prototypeId: string) => {
+        set((state) => {
+          const remainingScreens = state.screens.filter(
+            (s) => s.prototypeId !== prototypeId
+          );
+          const newActiveId =
+            state.activeScreenId &&
+            state.screens.find((s) => s.id === state.activeScreenId)?.prototypeId === prototypeId
+              ? remainingScreens.length > 0
+                ? remainingScreens[0].id
+                : null
+              : state.activeScreenId;
+          return {
+            screens: remainingScreens,
+            activeScreenId: newActiveId,
+          };
+        });
+      },
     }),
     {
-      name: 'uigen-screens',
+      name: 'lumina-screens',
       partialize: (state) => ({
         screens: state.screens,
         activeScreenId: state.activeScreenId,

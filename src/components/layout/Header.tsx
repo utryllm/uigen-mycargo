@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Settings, Github, Zap } from 'lucide-react';
+import { Settings, Github, Sparkles } from 'lucide-react';
 import { useSettingsStore } from '@/lib/store';
 import { cn } from '@/lib/utils/cn';
 
@@ -31,18 +31,20 @@ export function Header() {
       {/* Logo and Brand */}
       <div className="flex items-center gap-2 sm:gap-3">
         <div className="flex items-center gap-2 sm:gap-2.5">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-[#C41230] rounded-xl flex items-center justify-center shadow-sm">
-            <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-[#C41230] to-[#E91E63] rounded-xl flex items-center justify-center shadow-sm shadow-[#C41230]/20">
+            <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
-          <span className="text-lg sm:text-xl font-semibold text-[#333333]">
-            UI Sim
-          </span>
+          <div className="flex flex-col">
+            <span className="text-lg sm:text-xl font-bold text-[#1A1A1A] leading-tight">
+              Lumina
+            </span>
+            {!isMobile && (
+              <span className="text-[10px] text-[#888888] font-medium uppercase tracking-wider leading-tight">
+                UI Generator
+              </span>
+            )}
+          </div>
         </div>
-        {!isMobile && (
-          <span className="text-xs px-2.5 py-1 bg-[#F5F5F5] text-[#666666] rounded-full font-medium">
-            UI Generator
-          </span>
-        )}
       </div>
 
       {/* Actions */}

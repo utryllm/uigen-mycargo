@@ -49,7 +49,7 @@ export const useChatStore = create<ChatStore>()(
       },
     }),
     {
-      name: 'uigen-chat',
+      name: 'lumina-chat',
       partialize: (state) => ({
         messages: state.messages.slice(-50), // Keep last 50 messages
       }),
