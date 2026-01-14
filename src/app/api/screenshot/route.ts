@@ -93,8 +93,9 @@ export async function POST(req: Request) {
     // Remove type annotations like : React.FC<Props>, : JSX.Element, : React.ReactNode etc.
     cleanCode = cleanCode.replace(/:\s*(?:React\.)?(?:FC|FunctionComponent|ComponentType|ReactNode|ReactElement|JSX\.Element|CSSProperties|ChangeEvent|MouseEvent|KeyboardEvent|FormEvent|FocusEvent|SyntheticEvent|RefObject|MutableRefObject|Dispatch|SetStateAction)(?:<[^>]*>)?(?=\s*[,\)=\{;>\n])/g, '');
 
-    // Remove type annotations for custom types (PascalCase identifiers after colon)
-    cleanCode = cleanCode.replace(/:\s*[A-Z][a-zA-Z0-9]*(?:<[^>]*>)?(?:\[\])?(?:\s*\|\s*(?:null|undefined|[A-Z][a-zA-Z0-9]*(?:<[^>]*>)?(?:\[\])?))*(?=\s*[,\)=\{;>\n])/g, '');
+    // NOTE: We intentionally do NOT strip custom type annotations like `: CustomType`
+    // because they can be confused with object properties like `icon: Building2`
+    // The Babel typescript preset should handle these
 
     // Remove generic type parameters from function calls/definitions: <T>, <Props>, etc.
     cleanCode = cleanCode.replace(/<(?:string|number|boolean|any|void|null|undefined|Props|T|K|V|U|State|Action|[A-Z]\w*)(?:\s*,\s*[^>]+)?>\s*(?=\()/g, '');
