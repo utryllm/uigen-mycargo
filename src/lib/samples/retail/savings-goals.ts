@@ -1,7 +1,7 @@
 export const RETAIL_SAVINGS_GOALS = `'use client';
 
 import { useState } from 'react';
-import { Home, CreditCard, PiggyBank, TrendingUp, Plus, Plane, Car, GraduationCap, Home as HomeIcon, ChevronRight, Sparkles } from 'lucide-react';
+import { Home, CreditCard, PiggyBank, TrendingUp, Plus, Plane, Car, GraduationCap, Home as HomeIcon, ChevronRight, Sparkles, User } from 'lucide-react';
 
 export default function SavingsGoals() {
   const [activeNav, setActiveNav] = useState('savings-goals');
@@ -11,6 +11,7 @@ export default function SavingsGoals() {
     { id: 'payments', label: 'Payments', icon: CreditCard },
     { id: 'savings-goals', label: 'Goals', icon: PiggyBank },
     { id: 'smart-wealth', label: 'SmartWealth', icon: TrendingUp },
+    { id: 'profile', label: 'Profile', icon: User },
   ];
 
   const handleNavigate = (screenId: string) => {
@@ -58,16 +59,20 @@ export default function SavingsGoals() {
 
   return (
     <div className="min-h-screen bg-[#F5F5F5]">
-      {/* Bank Header Stripe */}
-      <div className="bg-[#C41230] h-2" />
-      <div className="bg-[#FFD200] h-1" />
+      {/* App Header Bar */}
+      <div className="bg-gradient-to-r from-[#1E3A5F] via-[#2E5A8F] to-[#1E3A5F] h-1" />
 
       {/* Header */}
       <header className="bg-white border-b border-[#E0E0E0] px-4 sm:px-6 py-4">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-lg sm:text-xl font-semibold text-[#333333]">Savings Goals</h1>
-            <p className="text-sm text-[#666666]">Track and achieve your financial goals</p>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-[#1E3A5F] to-[#2E5A8F] rounded-lg flex items-center justify-center">
+              <PiggyBank className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-lg sm:text-xl font-semibold text-[#333333]">Savings Goals</h1>
+              <p className="text-sm text-[#666666]">Track and achieve your financial goals</p>
+            </div>
           </div>
           <button className="flex items-center gap-2 px-3 py-2 bg-[#C41230] text-white rounded-lg text-sm font-medium hover:bg-[#A30F28] transition-colors">
             <Plus className="w-4 h-4" />

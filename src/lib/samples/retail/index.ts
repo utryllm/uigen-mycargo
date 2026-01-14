@@ -3,6 +3,7 @@ import { RETAIL_DASHBOARD } from './dashboard';
 import { RETAIL_PAYMENTS } from './payments';
 import { RETAIL_SAVINGS_GOALS } from './savings-goals';
 import { RETAIL_SMART_WEALTH } from './smart-wealth';
+import { RETAIL_PROFILE } from './profile';
 
 export const RETAIL_PROTOTYPE: Prototype = {
   id: 'retail-banking',
@@ -15,6 +16,7 @@ export const RETAIL_PROTOTYPE: Prototype = {
     'Everyday Payments',
     'Savings Goals',
     'SmartWealth',
+    'Profile & Settings',
   ],
   screens: [
     {
@@ -42,7 +44,13 @@ export const RETAIL_PROTOTYPE: Prototype = {
       code: RETAIL_SMART_WEALTH,
       description: 'Portfolio overview, investments, and advisor access',
     },
+    {
+      id: 'profile',
+      name: 'Profile & Settings',
+      code: RETAIL_PROFILE,
+      description: 'Account settings, linked cards, spending alerts, and preferences',
+    },
   ],
 };
 
-export { RETAIL_DASHBOARD, RETAIL_PAYMENTS, RETAIL_SAVINGS_GOALS, RETAIL_SMART_WEALTH };
+export { RETAIL_DASHBOARD, RETAIL_PAYMENTS, RETAIL_SAVINGS_GOALS, RETAIL_SMART_WEALTH, RETAIL_PROFILE };

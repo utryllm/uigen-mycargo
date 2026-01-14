@@ -1,6 +1,6 @@
 'use client';
 
-import { Code, Eye, Download, Share2, Copy, Check } from 'lucide-react';
+import { Code, Eye, Download, Share2, Copy, Check, Image, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useScreensStore } from '@/lib/store';
 import { cn } from '@/lib/utils/cn';
@@ -9,9 +9,11 @@ const MOBILE_BREAKPOINT = 768;
 
 interface CanvasToolbarProps {
   onExport: () => void;
+  onDownloadImage?: () => Promise<void>;
+  isCapturing?: boolean;
 }
 
-export function CanvasToolbar({ onExport }: CanvasToolbarProps) {
+export function CanvasToolbar({ onExport, onDownloadImage, isCapturing }: CanvasToolbarProps) {
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const { screens, activeScreenId, viewMode, setViewMode } = useScreensStore();
@@ -112,6 +114,27 @@ export function CanvasToolbar({ onExport }: CanvasToolbarProps) {
               Download
             </button>
           </>
+        )}
+
+        {hasScreens && currentViewMode === 'preview' && onDownloadImage && (
+          <button
+            onClick={onDownloadImage}
+            disabled={isCapturing}
+            className={cn(
+              'h-9 sm:h-10 px-3 sm:px-4 flex items-center gap-1.5 rounded-xl text-sm font-medium transition-all duration-200',
+              isCapturing
+                ? 'bg-[#EEF2FF] text-[#6366F1] cursor-wait'
+                : 'text-[#666666] hover:text-[#6366F1] hover:bg-[#EEF2FF]'
+            )}
+            title="Open in new window for screenshot"
+          >
+            {isCapturing ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Image className="w-4 h-4" />
+            )}
+            <span className="hidden sm:inline">{isCapturing ? 'Opening...' : 'Snapshot'}</span>
+          </button>
         )}
 
         {hasScreens && (

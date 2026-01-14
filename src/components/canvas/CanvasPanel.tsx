@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ScreenTabs } from './ScreenTabs';
 import { CanvasToolbar } from './CanvasToolbar';
 import { ScreenRenderer } from './ScreenRenderer';
@@ -11,15 +11,78 @@ import { Copy, Check, ExternalLink } from 'lucide-react';
 
 export function CanvasPanel() {
   const [mounted, setMounted] = useState(false);
-  const { screens, viewMode } = useScreensStore();
+  const { screens, viewMode, activeScreenId } = useScreensStore();
   const [exportModal, setExportModal] = useState(false);
   const [exportUrl, setExportUrl] = useState<string | null>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isCapturing, setIsCapturing] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const activeScreen = screens.find((s) => s.id === activeScreenId);
+
+  // Open preview in new window for screenshot capture
+  const handleDownloadImage = useCallback(async () => {
+    if (!activeScreen?.code) return;
+
+    setIsCapturing(true);
+
+    try {
+      // Call API to generate standalone HTML
+      const response = await fetch('/api/screenshot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: activeScreen.code,
+          name: activeScreen.name || 'Screen',
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate preview');
+      }
+
+      // Get the HTML content
+      const html = await response.text();
+
+      // Create a blob URL for the HTML
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+
+      // Open in new window
+      const popup = window.open(
+        url,
+        '_blank',
+        'width=1280,height=900,menubar=no,toolbar=no,location=no,status=no'
+      );
+
+      if (popup) {
+        popup.focus();
+        // Clean up blob URL after window loads
+        popup.onload = () => {
+          URL.revokeObjectURL(url);
+        };
+      } else {
+        URL.revokeObjectURL(url);
+        alert('Please allow popups for this site to open the preview.');
+      }
+    } catch (error) {
+      console.error('Preview failed:', error);
+      // Fallback to manual instructions
+      alert(
+        'Screenshot Preview\n\n' +
+        'Failed to open preview. Please use your system screenshot tool:\n\n' +
+        '• Windows: Press Win + Shift + S\n' +
+        '• Mac: Press Cmd + Shift + 4\n\n' +
+        'Then select the preview area to capture.'
+      );
+    } finally {
+      setIsCapturing(false);
+    }
+  }, [activeScreen?.code, activeScreen?.name]);
 
   const handleExport = async () => {
     if (screens.length === 0) return;
@@ -75,7 +138,11 @@ export function CanvasPanel() {
       }}
     >
       <ScreenTabs />
-      <CanvasToolbar onExport={handleExport} />
+      <CanvasToolbar
+        onExport={handleExport}
+        onDownloadImage={handleDownloadImage}
+        isCapturing={isCapturing}
+      />
 
       <div style={{ flex: 1, overflow: 'hidden' }}>
         {currentViewMode === 'preview' ? <ScreenRenderer /> : <CodeViewer />}
@@ -98,7 +165,7 @@ export function CanvasPanel() {
               style={{
                 width: '32px',
                 height: '32px',
-                border: '2px solid #C41230',
+                border: '2px solid #6366F1',
                 borderTopColor: 'transparent',
                 borderRadius: '50%',
                 margin: '0 auto 16px',

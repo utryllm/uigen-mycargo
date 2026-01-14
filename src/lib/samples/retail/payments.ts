@@ -1,7 +1,7 @@
 export const RETAIL_PAYMENTS = `'use client';
 
 import { useState } from 'react';
-import { Home, CreditCard, PiggyBank, TrendingUp, Send, Receipt, Clock, Users, ChevronRight, Plus, Search } from 'lucide-react';
+import { Home, CreditCard, PiggyBank, TrendingUp, Send, Receipt, Clock, Users, ChevronRight, Plus, Search, User } from 'lucide-react';
 
 export default function EverydayPayments() {
   const [activeNav, setActiveNav] = useState('payments');
@@ -12,6 +12,7 @@ export default function EverydayPayments() {
     { id: 'payments', label: 'Payments', icon: CreditCard },
     { id: 'savings-goals', label: 'Goals', icon: PiggyBank },
     { id: 'smart-wealth', label: 'SmartWealth', icon: TrendingUp },
+    { id: 'profile', label: 'Profile', icon: User },
   ];
 
   const handleNavigate = (screenId: string) => {
@@ -47,15 +48,19 @@ export default function EverydayPayments() {
 
   return (
     <div className="min-h-screen bg-[#F5F5F5]">
-      {/* Bank Header Stripe */}
-      <div className="bg-[#C41230] h-2" />
-      <div className="bg-[#FFD200] h-1" />
+      {/* App Header Bar */}
+      <div className="bg-gradient-to-r from-[#1E3A5F] via-[#2E5A8F] to-[#1E3A5F] h-1" />
 
       {/* Header */}
       <header className="bg-white border-b border-[#E0E0E0] px-4 sm:px-6 py-4">
-        <div>
-          <h1 className="text-lg sm:text-xl font-semibold text-[#333333]">Payments</h1>
-          <p className="text-sm text-[#666666]">Send money, pay bills, manage transfers</p>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-[#1E3A5F] to-[#2E5A8F] rounded-lg flex items-center justify-center">
+            <CreditCard className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h1 className="text-lg sm:text-xl font-semibold text-[#333333]">Payments</h1>
+            <p className="text-sm text-[#666666]">Send money, pay bills, manage transfers</p>
+          </div>
         </div>
       </header>
 

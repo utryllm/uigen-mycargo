@@ -108,6 +108,10 @@ export function ChatPanel() {
         return;
       }
 
+      // Check for /new command to force new screen creation
+      const forceNewScreen = message.toLowerCase().startsWith('/new ');
+      const actualMessage = forceNewScreen ? message.substring(5).trim() : message;
+
       // Add user message
       addMessage({ role: 'user', content: message });
 
@@ -117,11 +121,12 @@ export function ChatPanel() {
       setStreamingCode('');
 
       // Check if we have an active screen with code - this means we're editing
-      const isEditMode = activeScreen && activeScreen.code && activeScreen.type !== 'image';
+      // Unless /new command is used, which forces new screen creation
+      const isEditMode = !forceNewScreen && activeScreen && activeScreen.code && activeScreen.type !== 'image';
       const screenId = isEditMode ? activeScreen.id : addScreen({
-        name: getComponentNameFromPrompt(message),
+        name: getComponentNameFromPrompt(actualMessage),
         code: '',
-        description: message,
+        description: actualMessage,
       });
 
       // Add assistant message placeholder
@@ -138,7 +143,7 @@ export function ChatPanel() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            prompt: message,
+            prompt: actualMessage,
             provider,
             model,
             apiKey: getActiveKey(),
@@ -226,12 +231,12 @@ export function ChatPanel() {
       {/* Header - Modern gradient with icon */}
       <div className="relative overflow-hidden bg-white border-b border-[#E8E8E8] flex-shrink-0">
         {/* Subtle gradient accent */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#C41230]/5 via-transparent to-[#FFD200]/5" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#6366F1]/5 via-transparent to-[#8B5CF6]/5" />
 
         <div className="relative flex items-center justify-between px-4 sm:px-5 h-14 sm:h-16">
           <div className="flex items-center gap-3">
             {/* Icon */}
-            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-[#C41230] to-[#E91E63] rounded-xl flex items-center justify-center shadow-sm">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-[#6366F1] to-[#8B5CF6] rounded-xl flex items-center justify-center shadow-sm shadow-[#6366F1]/20">
               <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </div>
             <div>

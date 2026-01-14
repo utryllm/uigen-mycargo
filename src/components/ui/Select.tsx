@@ -29,7 +29,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
               // Standard select height (44px) for proper touch targets
               'w-full h-11 px-3.5 pr-10 border rounded-xl text-[15px] appearance-none',
               'bg-white cursor-pointer transition-all duration-200',
-              'focus:outline-none focus:ring-2 focus:ring-[#C41230] focus:border-transparent',
+              'focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent',
               error
                 ? 'border-[#DC3545] focus:ring-[#DC3545]'
                 : 'border-[#E0E0E0] hover:border-[#CCCCCC]',

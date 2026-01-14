@@ -17,12 +17,21 @@ export default function Home() {
     return (
       <div className="h-screen w-screen flex items-center justify-center bg-gradient-to-br from-[#FAFAFA] to-[#F0F0F0]">
         <div className="text-center">
-          <div className="w-12 h-12 bg-gradient-to-br from-[#C41230] to-[#E91E63] rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#C41230]/20 animate-pulse">
-            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+          <div className="w-12 h-12 bg-gradient-to-br from-[#6366F1] to-[#8B5CF6] rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#6366F1]/25 animate-pulse">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
+              <rect x="8" y="6" width="6" height="6" rx="1.5" fill="white" />
+              <rect x="18" y="6" width="6" height="6" rx="1.5" fill="white" fillOpacity="0.9" />
+              <rect x="18" y="13" width="6" height="6" rx="1.5" fill="white" fillOpacity="0.7" />
+              <rect x="8" y="13" width="6" height="6" rx="1.5" fill="white" />
+              <rect x="8" y="20" width="6" height="6" rx="1.5" fill="white" fillOpacity="0.8" />
+              <path d="M14 9H18" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity="0.6" />
+              <path d="M11 12V13" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity="0.6" />
+              <path d="M14 16H18" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity="0.6" />
+              <path d="M11 19V20" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity="0.6" />
+              <path d="M21 12V13" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity="0.6" />
             </svg>
           </div>
-          <p className="text-[#666666] text-sm font-medium">Loading Lumina UI...</p>
+          <p className="text-[#666666] text-sm font-medium">Loading Protofy...</p>
         </div>
       </div>
     );

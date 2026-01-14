@@ -3,6 +3,7 @@ import { BUSINESS_DASHBOARD } from './dashboard';
 import { BUSINESS_LENDING } from './lending';
 import { BUSINESS_RELATIONSHIP_MANAGER } from './relationship-manager';
 import { BUSINESS_ANALYTICS } from './analytics';
+import { BUSINESS_PROFILE } from './profile';
 
 export const BUSINESS_PROTOTYPE: Prototype = {
   id: 'business-banking',
@@ -15,6 +16,7 @@ export const BUSINESS_PROTOTYPE: Prototype = {
     'Corporate Lending',
     'Relationship Manager',
     'Business Analytics',
+    'Profile & Settings',
   ],
   screens: [
     {
@@ -42,7 +44,13 @@ export const BUSINESS_PROTOTYPE: Prototype = {
       code: BUSINESS_ANALYTICS,
       description: 'Cash flow charts, spending categories, and financial reports',
     },
+    {
+      id: 'profile',
+      name: 'Profile & Settings',
+      code: BUSINESS_PROFILE,
+      description: 'Account settings, company details, team management, and API access',
+    },
   ],
 };
 
-export { BUSINESS_DASHBOARD, BUSINESS_LENDING, BUSINESS_RELATIONSHIP_MANAGER, BUSINESS_ANALYTICS };
+export { BUSINESS_DASHBOARD, BUSINESS_LENDING, BUSINESS_RELATIONSHIP_MANAGER, BUSINESS_ANALYTICS, BUSINESS_PROFILE };

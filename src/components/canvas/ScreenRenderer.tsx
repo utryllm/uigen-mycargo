@@ -7,7 +7,8 @@ import {
   SandpackThemeProvider,
 } from '@codesandbox/sandpack-react';
 import { useScreensStore } from '@/lib/store';
-import { Loader2, MonitorSmartphone, AlertCircle } from 'lucide-react';
+import { Loader2, MonitorSmartphone } from 'lucide-react';
+import { SandpackErrorBoundary } from './SandpackErrorBoundary';
 
 const SANDPACK_THEME = {
   colors: {
@@ -74,6 +75,17 @@ export function ScreenRenderer() {
   }, []);
 
   const activeScreen = mounted ? screens.find((s) => s.id === activeScreenId) : null;
+
+  // Force re-render when activeScreenId changes (e.g., prototype loads)
+  useEffect(() => {
+    if (mounted && activeScreenId) {
+      // Small delay to ensure state is fully updated
+      const timer = setTimeout(() => {
+        setSandpackKey(prev => prev + 1);
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [mounted, activeScreenId]);
 
   // Listen for postMessage navigation events from Sandpack iframe
   useEffect(() => {
@@ -388,30 +400,40 @@ ${cleanCode}
         }}
         customSetup={{
           dependencies: {
-            'lucide-react': 'latest',
+            // Icons - essential and well-tested
+            'lucide-react': '0.460.0',
+            // Charts - commonly requested feature
+            'recharts': '2.13.3',
+            // Progress indicators
+            'react-circular-progressbar': '2.1.0',
+            // Utilities
+            'clsx': '2.1.1',
           },
         }}
       >
         <SandpackThemeProvider theme={SANDPACK_THEME}>
-          <div
-            style={{
-              height: '100%',
-              width: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <SandpackPreview
-              showOpenInCodeSandbox={false}
-              showRefreshButton={true}
+          <SandpackErrorBoundary onRetry={() => setSandpackKey(prev => prev + 1)}>
+            <div
               style={{
                 height: '100%',
                 width: '100%',
-                flex: 1,
-                minHeight: 0,
+                display: 'flex',
+                flexDirection: 'column',
               }}
-            />
-          </div>
+            >
+              <SandpackPreview
+                showOpenInCodeSandbox={false}
+                showRefreshButton={true}
+                showSandpackErrorOverlay={false}
+                style={{
+                  height: '100%',
+                  width: '100%',
+                  flex: 1,
+                  minHeight: 0,
+                }}
+              />
+            </div>
+          </SandpackErrorBoundary>
         </SandpackThemeProvider>
       </SandpackProvider>
     </div>

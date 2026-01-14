@@ -105,25 +105,25 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
     <div className="border-t border-[#E8E8E8] bg-white p-3 sm:p-4">
       {/* Command Suggestions */}
       {showCommands && (
-        <div className="mb-3 bg-white border border-[#E8E8E8] rounded-xl shadow-lg overflow-hidden">
-          <div className="px-3 py-2 bg-gradient-to-r from-[#FAFAFA] to-[#F5F5F5] border-b border-[#E8E8E8]">
+        <div className="mb-3 bg-white border border-[#E5E5E5] rounded-xl shadow-lg overflow-hidden">
+          <div className="px-3 py-2.5 bg-gradient-to-r from-[#FAFAFA] to-[#F5F5F5] border-b border-[#E5E5E5]">
             <div className="flex items-center gap-2">
               <Command className="w-3.5 h-3.5 text-[#666666]" />
-              <span className="text-[11px] font-semibold text-[#666666] uppercase tracking-wide">Commands</span>
+              <span className="text-xs font-semibold text-[#666666] uppercase tracking-wide">Commands</span>
             </div>
           </div>
           <div className="max-h-48 overflow-y-auto">
             {filteredCommands.map((cmd) => (
               <button
                 key={cmd.name}
-                className="w-full px-3 py-2.5 text-left hover:bg-[#FEF2F4] transition-colors border-b border-[#F0F0F0] last:border-b-0 group"
+                className="w-full px-3 py-3 text-left hover:bg-[#EEF2FF] transition-colors border-b border-[#F0F0F0] last:border-b-0 group"
                 onClick={() => handleCommandSelect(cmd.name)}
               >
-                <div className="flex items-center justify-between">
-                  <span className="text-[13px] font-medium text-[#333333] group-hover:text-[#C41230]">{cmd.name}</span>
-                  <span className="text-[10px] text-[#999999] font-mono bg-[#F5F5F5] px-1.5 py-0.5 rounded">{cmd.usage}</span>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-sm font-medium text-[#333333] group-hover:text-[#6366F1] truncate">{cmd.name}</span>
+                  <span className="text-xs text-[#999999] font-mono bg-[#F5F5F5] px-2 py-0.5 rounded flex-shrink-0">{cmd.usage}</span>
                 </div>
-                <p className="text-[11px] text-[#666666] mt-0.5">{cmd.description}</p>
+                <p className="text-xs text-[#666666] mt-1 truncate">{cmd.description}</p>
               </button>
             ))}
           </div>
@@ -135,7 +135,7 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
         className={cn(
           'relative rounded-2xl border-2 transition-all duration-200',
           isFocused
-            ? 'border-[#C41230]/50 bg-white shadow-sm shadow-[#C41230]/10'
+            ? 'border-[#6366F1]/50 bg-white shadow-sm shadow-[#6366F1]/10'
             : 'border-[#E8E8E8] bg-[#FAFAFA] hover:border-[#D0D0D0]'
         )}
       >
@@ -155,9 +155,9 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
           disabled={isDisabled}
           rows={1}
           className={cn(
-            'w-full min-h-[44px] max-h-[140px] px-4 py-3 pr-28',
+            'w-full min-h-[48px] max-h-[140px] px-4 py-3.5 pr-28',
             'bg-transparent',
-            'text-[14px] leading-6 text-[#1A1A1A] placeholder:text-[#999999]',
+            'text-sm leading-relaxed text-[#1A1A1A] placeholder:text-[#9CA3AF]',
             'focus:outline-none',
             'resize-none',
             'disabled:opacity-50 disabled:cursor-not-allowed'
@@ -181,7 +181,7 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
             disabled={isDisabled}
             className={cn(
               'w-8 h-8 rounded-lg flex items-center justify-center transition-all',
-              'text-[#888888] hover:text-[#C41230] hover:bg-[#FEF2F4]',
+              'text-[#888888] hover:text-[#6366F1] hover:bg-[#EEF2FF]',
               'disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#888888]'
             )}
             title="Upload image"
@@ -198,7 +198,7 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
             disabled={isDisabled}
             className={cn(
               'w-8 h-8 rounded-lg flex items-center justify-center transition-all',
-              'text-[#888888] hover:text-[#C41230] hover:bg-[#FEF2F4]',
+              'text-[#888888] hover:text-[#6366F1] hover:bg-[#EEF2FF]',
               'disabled:opacity-40 disabled:cursor-not-allowed'
             )}
             title="Commands"
@@ -213,7 +213,7 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
             className={cn(
               'w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200',
               input.trim() && !isDisabled
-                ? 'bg-gradient-to-br from-[#C41230] to-[#E91E63] text-white shadow-sm hover:shadow-md hover:scale-105 active:scale-95'
+                ? 'bg-gradient-to-br from-[#6366F1] to-[#8B5CF6] text-white shadow-sm hover:shadow-md hover:scale-105 active:scale-95'
                 : 'bg-[#E5E5E5] text-[#AAAAAA] cursor-not-allowed'
             )}
           >
@@ -230,7 +230,7 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
           <div className="absolute inset-0 flex items-center justify-center bg-white/90 rounded-2xl backdrop-blur-sm">
             <button
               onClick={() => setIsApiKeyModalOpen(true)}
-              className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#C41230] to-[#E91E63] text-white text-[13px] font-medium rounded-xl hover:shadow-lg hover:shadow-[#C41230]/20 transition-all active:scale-95"
+              className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white text-sm font-medium rounded-xl hover:shadow-lg hover:shadow-[#6366F1]/20 transition-all active:scale-95"
             >
               <Sparkles className="w-4 h-4" />
               Add API Key to Start
@@ -240,15 +240,15 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
       </div>
 
       {/* Footer hint - subtle */}
-      <div className="flex items-center justify-center gap-3 mt-2.5">
-        <span className="text-[11px] text-[#AAAAAA]">
-          <kbd className="px-1.5 py-0.5 bg-[#F0F0F0] rounded text-[10px] font-mono">Enter</kbd>
-          <span className="mx-1">to send</span>
+      <div className="flex items-center justify-center gap-3 mt-3">
+        <span className="text-xs text-[#9CA3AF]">
+          <kbd className="px-1.5 py-0.5 bg-[#F3F4F6] rounded text-[11px] font-mono border border-[#E5E7EB]">Enter</kbd>
+          <span className="mx-1.5">to send</span>
         </span>
-        <span className="text-[#D0D0D0]">·</span>
-        <span className="text-[11px] text-[#AAAAAA]">
-          <kbd className="px-1.5 py-0.5 bg-[#F0F0F0] rounded text-[10px] font-mono">/</kbd>
-          <span className="mx-1">for commands</span>
+        <span className="text-[#D1D5DB]">·</span>
+        <span className="text-xs text-[#9CA3AF]">
+          <kbd className="px-1.5 py-0.5 bg-[#F3F4F6] rounded text-[11px] font-mono border border-[#E5E7EB]">/</kbd>
+          <span className="mx-1.5">for commands</span>
         </span>
       </div>
     </div>

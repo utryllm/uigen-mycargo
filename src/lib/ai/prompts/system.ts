@@ -146,14 +146,42 @@ export default function ComponentName() {
 }
 \`\`\`
 
+## Available Libraries
+You can ONLY use these npm packages (they are pre-installed):
+
+### Icons
+- \`lucide-react\` - Import icons: \`import { Home, Settings, User, ChevronRight, Plus, X } from 'lucide-react'\`
+
+### Charts & Data Visualization
+- \`recharts\` - For all charts (LineChart, BarChart, PieChart, AreaChart)
+  \`\`\`tsx
+  import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
+  \`\`\`
+
+### Utilities
+- \`clsx\` - For conditional class names: \`import { clsx } from 'clsx'\`
+
+### Built-in (no import needed)
+- React: useState, useEffect, useMemo, useCallback, useRef
+- Native HTML elements with Tailwind styling
+
+### CRITICAL - DO NOT USE THESE (will cause errors):
+- date-fns, dayjs, moment - Use \`new Date().toLocaleDateString()\` instead
+- react-datepicker - Use \`<input type="date" />\` instead
+- framer-motion - Use Tailwind \`transition-*\` and \`animate-*\` classes
+- react-hook-form, zod - Use useState for form handling
+- @radix-ui/*, @headlessui/* - Build from scratch with Tailwind
+- chart.js - Use recharts instead
+- ANY other package not listed above
+
 ## Important Rules
-- NEVER use external images - use colored divs or Lucide icons instead
-- ALWAYS include hover states and transitions
-- Make tables sortable when appropriate
-- Include pagination for lists with many items
-- Forms should have proper validation feedback
-- Use semantic HTML elements
-- Ensure accessibility (aria labels, proper contrast)`;
+- NEVER use external images - use colored divs or Lucide icons
+- ALWAYS include hover states using Tailwind \`hover:\` classes
+- For date display: \`new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })\`
+- For date inputs: \`<input type="date" className="px-3 py-2 border rounded..." />\`
+- For animations: Use \`transition-all duration-200\`, \`animate-pulse\`, \`animate-spin\`
+- For charts: ALWAYS use recharts with ResponsiveContainer wrapper
+- ONLY import from: react, lucide-react, recharts, clsx`;
 
 export const EDIT_PROMPT_PREFIX = `You are editing an existing component. Modify the code to incorporate the requested changes while maintaining the existing structure and design system. Return the complete updated component code.
 
