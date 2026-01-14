@@ -16,16 +16,15 @@ export function SandpackErrorBoundary({ children, onRetry }: SandpackErrorBounda
 
   // Listen for Sandpack errors
   useEffect(() => {
-    const errors = sandpack.errors;
-    if (errors && errors.length > 0 && !dismissed) {
-      // Get the first error message
-      const errorMessage = errors.map(e => e.message).join('\n');
-      setError(errorMessage);
-    } else if (!errors || errors.length === 0) {
+    const sandpackError = sandpack.error;
+    if (sandpackError && !dismissed) {
+      // Get the error message
+      setError(sandpackError.message || String(sandpackError));
+    } else if (!sandpackError) {
       setError(null);
       setDismissed(false);
     }
-  }, [sandpack.errors, dismissed]);
+  }, [sandpack.error, dismissed]);
 
   const handleDismiss = useCallback(() => {
     setDismissed(true);
