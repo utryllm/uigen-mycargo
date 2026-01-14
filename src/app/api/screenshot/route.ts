@@ -26,16 +26,16 @@ export async function POST(req: Request) {
 
     // Remove all import statements (we provide globals instead)
     // This handles various import formats including multi-line imports
-    // First, remove multi-line imports using regex
-    cleanCode = cleanCode.replace(/import\s*\{[^}]*\}\s*from\s*['"][^'"]+['"];?\s*/gs, '');
-    cleanCode = cleanCode.replace(/import\s+\w+\s*,?\s*\{[^}]*\}\s*from\s*['"][^'"]+['"];?\s*/gs, '');
+    // First, remove multi-line imports using regex (using [\s\S] instead of . with s flag for compatibility)
+    cleanCode = cleanCode.replace(/import\s*\{[\s\S]*?\}\s*from\s*['"][^'"]+['"];?\s*/g, '');
+    cleanCode = cleanCode.replace(/import\s+\w+\s*,?\s*\{[\s\S]*?\}\s*from\s*['"][^'"]+['"];?\s*/g, '');
     cleanCode = cleanCode.replace(/import\s+\w+\s+from\s*['"][^'"]+['"];?\s*/g, '');
     cleanCode = cleanCode.replace(/import\s*['"][^'"]+['"];?\s*/g, '');
 
     // Also filter line by line for any remaining imports
     cleanCode = cleanCode
       .split('\n')
-      .filter(line => {
+      .filter((line: string) => {
         const trimmed = line.trim();
         // Skip lines that start with 'import'
         if (trimmed.startsWith('import ') || trimmed.startsWith('import{') || trimmed.startsWith('import(')) {
@@ -81,9 +81,9 @@ export async function POST(req: Request) {
     cleanCode = cleanCode.replace(/export\s+/g, '');
 
     // Remove TypeScript type annotations that might cause issues
-    // Remove interface/type declarations (including multi-line)
-    cleanCode = cleanCode.replace(/interface\s+\w+\s*(?:extends\s+[^{]+)?\{[^}]*\}/gs, '');
-    cleanCode = cleanCode.replace(/type\s+\w+\s*=\s*(?:\{[^}]*\}|[^;]+);/gs, '');
+    // Remove interface/type declarations (including multi-line, using [\s\S] for compatibility)
+    cleanCode = cleanCode.replace(/interface\s+\w+\s*(?:extends\s+[^{]+)?\{[\s\S]*?\}/g, '');
+    cleanCode = cleanCode.replace(/type\s+\w+\s*=\s*(?:\{[\s\S]*?\}|[^;]+);/g, '');
 
     // Remove type annotations after colons in various contexts
     // Match : followed by type until , or ) or = or { or ; or newline
